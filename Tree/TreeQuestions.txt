@@ -61,3 +61,149 @@ public:
         return ans;
     }     
 };
+
+
+Check Balanced Binary Tree.(Naive Approach)
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        if(!root) return true;
+
+        bool left=isBalanced(root->left);
+        bool right=isBalanced(root->right);
+        bool diff=abs(height(root->left)-height(root->right))<=1;
+
+        if(left && right && diff) return true;
+        else return false;
+    }
+    int height(TreeNode* root){
+        if(!root) return 0;
+
+        int left=height(root->left);
+        int right=height(root->right);
+        int ans=max(left,right)+1;
+        return ans;
+    }
+};
+
+Check Balanced Binary Tree.(Optimised Approach)
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        return Balanced(root).first;
+    }
+
+    pair<bool,int> Balanced(TreeNode* root){
+        if(!root){
+            pair<bool,int> p=make_pair(1,0);
+            return p;
+        }
+
+        pair<bool,int> left=Balanced(root->left);
+        pair<bool,int> right=Balanced(root->right);
+        bool diff=abs(left.second-right.second)<=1;
+        
+        pair<bool,int> ans;
+        ans.first=(left.first && right.first && diff);
+        ans.second=max(left.second,right.second)+1;
+        return ans;
+    }
+};
+
+
+Sum Tree(Geeks for geeks)
+class Solution
+{
+    public:
+    bool isSumTree(Node* root)
+    {
+        return SumTree(root).first;
+    }
+    pair<bool,int> SumTree(Node* root){
+        if(!root){
+            pair<bool,int> p=make_pair(1,0);
+            return p;
+        }
+        if(root->left==NULL && root->right==NULL){
+            pair<bool,int> p=make_pair(1,root->data);
+            return p;
+        }
+        
+        pair<bool,int> left=SumTree(root->left);
+        pair<bool,int> right=SumTree(root->right);
+        
+        bool leftAns=left.first;
+        bool rightAns=right.first;
+        bool sum=(left.second+right.second)==root->data;
+        
+        pair<bool,int> ans;
+        if(leftAns && rightAns && sum){
+            ans.first=true;
+            ans.second=2*root->data;
+        }
+        else{
+            ans.first=false;
+            ans.second=root->data+left.second+right.second;
+        }
+        return ans;
+    }
+};
+
+Boundary Tree Traversal
+class Solution {
+public:
+    vector <int> boundary(Node *root)
+    {
+        vector<int> ans;
+        ans.push_back(root->data);
+        TraverseLeft(root->left,ans);
+        traverseLeaf(root->left,ans);
+        traverseLeaf(root->right,ans);
+        TraverseRight(root->right,ans);
+        return ans;
+    }
+    
+    void TraverseLeft(Node *root,vector<int>&ans){
+        if((root==NULL) || (root->left==NULL && root->right==NULL)){
+            return ;
+        }
+        ans.push_back(root->data);
+        if(root->left){
+            TraverseLeft(root->left,ans);
+        }
+        else{
+            TraverseLeft(root->right,ans);
+        }
+    }
+    
+    void traverseLeaf(Node* root, vector<int> &ans) {
+        //base case
+        if(root == NULL)
+            return ;
+            
+        if(root->left == NULL && root->right == NULL) {
+            ans.push_back(root->data);
+            return;
+        }
+        
+        traverseLeaf(root->left, ans);
+        traverseLeaf(root->right, ans);
+        
+    }
+    
+    void TraverseRight(Node* root,vector<int>&ans){
+        if(!root || (root->left==NULL && root->right==NULL)){
+            return;
+        }
+        
+        if(root->right){
+            TraverseRight(root->right,ans);
+        }
+        else{
+            TraverseRight(root->left,ans);
+        }
+        ans.push_back(root->data);
+    }
+};
+
+
